@@ -48,6 +48,10 @@ The frontend-only preview (`npm start`) cannot detect USB phones. The desktop co
 
 Build on Windows x64 with the Tauri Windows prerequisites, Node 24.21.0, and Rust 1.99.1:
 
+The repository's `.gitattributes` keeps text files, including the checksum-verified `android-helper/DroidUi.java`, in LF format on every platform. DEX and icon files retain their binary bytes. Do not regenerate the helper manifest just to accommodate CRLF conversion: the verifier intentionally checks exact source and artifact bytes.
+
+For an existing Windows checkout whose unmodified helper still uses CRLF, preserve any local edits before refreshing that file with `git restore --source=HEAD --worktree -- android-helper/DroidUi.java`. Fresh CI checkouts apply the attributes automatically.
+
 ```powershell
 npm ci
 npm run tools:prepare
@@ -62,6 +66,8 @@ The installer is written to `src-tauri/target/release/bundle/nsis/`. Validate in
 ## CI artifacts
 
 `.github/workflows/build.yml` defines Linux Docker and native Windows builds. It runs on pull requests, pushes to `main`/`develop`, or manual dispatch and uploads downloadable workflow artifacts for 14 days. It has read-only repository permissions, does not create releases, and does not push commits or packages. Workflow files alone are not evidence that CI has run successfully.
+
+Windows tool preparation, frontend tests and frontend compilation run as separate steps so a failed native command cannot be hidden by a later successful command in the same PowerShell step.
 
 References: [Tauri AppImage packaging](https://v2.tauri.app/distribute/appimage/), [Tauri Windows installers](https://v2.tauri.app/distribute/windows-installer/), and [Docker local export](https://docs.docker.com/build/exporters/local-tar/).
 

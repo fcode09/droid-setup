@@ -1,0 +1,7 @@
+# Keep source hashes and shell scripts identical across Linux and Windows checkouts.
+* text=auto eol=lf
+
+# Bundled bytecode and application icons must never undergo text conversion.
+*.dex binary
+*.png binary
+*.ico binary
