@@ -1,0 +1,6 @@
+{
+  "identifier": "main-window",
+  "description": "Local application window; no shell, network or general filesystem access exposed to the webview.",
+  "windows": ["main"],
+  "permissions": ["clipboard-manager:allow-write-text"]
+}

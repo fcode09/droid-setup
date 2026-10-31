@@ -1,0 +1,168 @@
+<h1 class="sr-only">{{ p.t('connect') }}</h1>
+<div #scrollRegion class="page-content" tabindex="0" [attr.aria-label]="p.t('connect')">
+  <div class="connect-grid">
+    <section
+      class="panel device-panel"
+      aria-labelledby="device-title"
+      [class.connected]="c.state() === 'connected'"
+    >
+      <div class="device-header">
+        <span class="eyebrow">{{ p.t('deviceLabel') }}</span
+        ><button
+          class="refresh"
+          (click)="c.refresh()"
+          [disabled]="c.busy() || c.readingIdentifiers() || c.state() === 'preview'"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20 7v5h-5M4 17v-5h5M6 7a7 7 0 0 1 12-1l2 6M4 12l2 6a7 7 0 0 0 12-1" /></svg
+          >{{ p.t(c.busy() ? 'refreshing' : 'refresh') }}
+        </button>
+      </div>
+      @if (c.devices().length > 1) {
+        <div class="device-selector">
+          <h3>{{ p.t('selectDevice') }}</h3>
+          <app-select
+            [label]="p.t('selectDevice')"
+            [value]="c.selectedSerial() ?? ''"
+            [placeholder]="p.t('choosePlaceholder')"
+            [options]="deviceOptions()"
+            [disabled]="c.readingIdentifiers()"
+            (valueChange)="c.select($event)"
+          />
+        </div>
+      }
+      <div
+        class="status-region"
+        [class.warning]="
+          [
+            'unauthorized',
+            'no-permissions',
+            'offline',
+            'timeout',
+            'error',
+            'missing-tools',
+          ].includes(c.state())
+        "
+      >
+        <div class="device-symbol" aria-hidden="true">
+          <svg viewBox="0 0 32 40">
+            <rect x="6" y="2" width="20" height="34" rx="4" />
+            <path d="M13 7h6M14 31h4" /></svg
+          ><span class="status-dot"></span>
+        </div>
+        <div class="status-copy" role="status" aria-live="polite" aria-atomic="true">
+          <h2 id="device-title">{{ p.t(c.title()) }}</h2>
+          <p>{{ p.t(c.description()) }}</p>
+        </div>
+      </div>
+      @if (c.state() === 'connected') {
+        @if (c.selected(); as device) {
+          <dl class="device-details">
+            @for (field of fields(); track field.key) {
+              <div>
+                <dt>{{ p.t(field.key) }}</dt>
+                <dd>
+                  <span [class.mono]="field.key === 'serial' || field.key === 'imei'">{{
+                    field.value
+                  }}</span
+                  ><app-copy-button [value]="field.value" [label]="p.t(field.key)" />
+                </dd>
+                @if (field.fromScreen) {
+                  <span class="data-source">{{ p.t('fromSettings') }}</span>
+                }
+              </div>
+            }
+          </dl>
+          @if (c.identifiersSupported()) {
+            <div class="identifier-actions">
+              <button
+                class="primary"
+                [disabled]="c.busy() || c.readingIdentifiers()"
+                (click)="readFromPhone()"
+              >
+                {{ p.t(c.readingIdentifiers() ? 'readingPhone' : 'readFromPhone') }}
+              </button>
+            </div>
+            <p class="identity-hint">{{ p.t('readingHint') }}</p>
+            @if (readFeedback() !== 'none') {
+              <p class="notice" role="status">
+                {{
+                  p.t(
+                    readFeedback() === 'complete'
+                      ? 'readComplete'
+                      : readFeedback() === 'partial'
+                        ? 'readPartial'
+                        : readFeedback() === 'unavailable'
+                          ? 'readUnavailable'
+                          : readFeedback() === 'cleanup'
+                            ? 'cleanupWarning'
+                            : readFeedback() === 'tools-error'
+                              ? 'readerToolsError'
+                              : 'readError'
+                  )
+                }}
+              </p>
+            }
+          }
+        }
+      }
+      <div class="last-checked">
+        @if (c.lastChecked(); as checked) {
+          {{ p.t('checked') }} · {{ checked | date: 'HH:mm:ss' }}
+        } @else {
+          {{ p.t('notChecked') }}
+        }
+      </div>
+    </section>
+    <section class="panel guide" aria-labelledby="guide-title">
+      <div class="eyebrow">{{ p.t('guideLabel') }}</div>
+      <h2 id="guide-title">{{ p.t('guide') }}</h2>
+      <ol class="steps">
+        <li>
+          <span class="step-number" aria-hidden="true">01</span>
+          <div>
+            <h3>{{ p.t('step1') }}</h3>
+            <p>{{ p.t('step1Body') }}</p>
+            <details>
+              <summary>{{ p.t('detailHelp') }}</summary>
+              <p>{{ p.t('step1Help') }}</p>
+              <p>{{ p.t('usbDebuggingHelp') }}</p>
+            </details>
+          </div>
+        </li>
+        <li>
+          <span class="step-number" aria-hidden="true">02</span>
+          <div>
+            <h3>{{ p.t('step2') }}</h3>
+            <p>{{ p.t('step2Body') }}</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-number" aria-hidden="true">03</span>
+          <div>
+            <h3>{{ p.t('step3') }}</h3>
+            <p>{{ p.t('step3Body') }}</p>
+            <details>
+              <summary>{{ p.t('detailHelp') }}</summary>
+              <p>{{ p.t('step3Help') }}</p>
+            </details>
+          </div>
+        </li>
+      </ol>
+    </section>
+  </div>
+  <div class="below-grid">
+    <div class="next-step">
+      <span class="next-icon" aria-hidden="true">↗</span>
+      <div>
+        <h3>{{ p.t('nextTitle') }}</h3>
+        <p>{{ p.t('nextBody') }}</p>
+      </div>
+    </div>
+    <details class="help">
+      <summary>{{ p.t('troubleshooting') }}</summary>
+      <p>{{ p.t('linuxHelp') }}</p>
+      <p>{{ p.t('windowsHelp') }}</p>
+    </details>
+  </div>
+</div>

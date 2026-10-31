@@ -1,0 +1,151 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+}
+.page-header {
+  flex-shrink: 0;
+  margin-bottom: 0;
+  padding: var(--page-padding) var(--page-padding) 0;
+  overflow: hidden;
+  scrollbar-gutter: stable both-edges;
+}
+.page-content {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-padding-block: 8px;
+  scrollbar-gutter: stable both-edges;
+  padding: var(--page-padding);
+}
+.settings-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+.wide {
+  grid-column: 1 / -1;
+}
+p {
+  font-size: 14px;
+}
+.language-field {
+  max-width: 320px;
+}
+.field-label {
+  font-size: 16px;
+}
+dl {
+  margin-bottom: 0;
+}
+dl div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  border-top: 1px solid var(--border);
+  padding: 12px 0;
+  font-size: 12px;
+}
+dt {
+  color: var(--muted);
+}
+dd {
+  text-align: right;
+  margin: 0;
+}
+.licenses {
+  border-top: 1px solid var(--border);
+  margin-top: 24px;
+  padding-top: 24px;
+}
+pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 12px;
+  padding: 16px;
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.notice {
+  margin-top: 16px;
+}
+@container workspace (max-width: 740px) {
+  .settings-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-height: 520px) {
+  :host {
+    overflow-y: auto;
+    scrollbar-gutter: stable both-edges;
+  }
+  .page-content {
+    flex: 0 0 auto;
+    overflow: visible;
+    scrollbar-gutter: auto;
+  }
+  .page-header {
+    margin-bottom: 0;
+    scrollbar-gutter: auto;
+  }
+}
+
+.license-dialog {
+  width: min(880px, calc(100vw - 40px));
+  max-width: none;
+  height: min(720px, calc(100dvh - 40px));
+  max-height: none;
+  padding: 0;
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+}
+.license-dialog[open] {
+  display: flex;
+  flex-direction: column;
+}
+.license-dialog::backdrop {
+  background: #03080ec9;
+}
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.dialog-header h2 {
+  margin: 0;
+}
+.dialog-body {
+  min-height: 0;
+  flex: 1;
+  overflow: auto;
+  padding: 20px 24px;
+  scroll-padding: 8px;
+}
+.dialog-body pre {
+  margin: 0;
+  overflow: visible;
+}
+@media (max-width: 640px) {
+  .dialog-header {
+    padding: 16px;
+    flex-wrap: wrap;
+  }
+  .dialog-body {
+    padding: 16px;
+  }
+}
+
+.page-content:focus-visible {
+  outline-offset: -2px;
+}

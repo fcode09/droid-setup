@@ -1,0 +1,25 @@
+<button
+  type="button"
+  class="copy-button"
+  (click)="copy()"
+  [disabled]="!value() || state() === 'copying'"
+  [class.copied]="state() === 'copied'"
+  [attr.aria-label]="p.t('copy') + ' ' + label()"
+  [attr.title]="p.t(state() === 'copied' ? 'copied' : state() === 'failed' ? 'copyFailed' : 'copy')"
+>
+  <svg viewBox="0 0 20 20" aria-hidden="true">
+    @if (state() === 'copied') {
+      <path d="m4 10 4 4 8-8" />
+    } @else {
+      <rect x="7" y="7" width="10" height="10" rx="2" />
+      <path d="M12 7V4a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h3" />
+    }
+  </svg>
+</button>
+<span class="feedback" role="status">
+  @if (state() === 'copied') {
+    {{ p.t('copied') }}
+  } @else if (state() === 'failed') {
+    {{ p.t('copyFailed') }}
+  }
+</span>
