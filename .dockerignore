@@ -1,0 +1,16 @@
+.git
+.github
+node_modules
+.angular
+dist
+out-tsc
+coverage
+artifacts
+tmp
+src-tauri/target
+src-tauri/gen
+src-tauri/resources/adb
+src-tauri/resources/adb-staging-*
+.env
+.env.*
+*.log

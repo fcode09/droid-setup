@@ -1,0 +1,8 @@
+{
+  "minApi": 24,
+  "compiler": "Android Build-Tools 36.0.0 / D8 8.10.9-dev",
+  "files": {
+    "android-helper/DroidUi.java": "2b49da5ddf3964d5d9010ad5bf1d1826e242a8b751e5486c69bdfdf031b8b292",
+    "src-tauri/resources/helper/DroidUi.dex": "6df3e5d710073dd4be35b92c5abb778a92fa330b3a1d3b4590b8f7aecbde35ba"
+  }
+}

@@ -1,0 +1,69 @@
+<header class="page-header">
+  <h1>{{ p.t('settingsTitle') }}</h1>
+  <p>{{ p.t('settingsSubtitle') }}</p>
+</header>
+<div class="page-content" tabindex="0" [attr.aria-label]="p.t('settings')">
+  <div class="settings-grid">
+    <section class="panel">
+      <h2 class="field-label">{{ p.t('language') }}</h2>
+      <p>{{ p.t('languageHelp') }}</p>
+      <app-select
+        class="language-field"
+        [label]="p.t('language')"
+        [value]="p.language()"
+        [options]="languages"
+        (valueChange)="p.setLanguage($event)"
+      />
+      @if (p.storageError()) {
+        <p class="notice" role="alert">{{ p.t('storageWarning') }}</p>
+      }
+    </section>
+    <section class="panel">
+      <h2>{{ p.t('tools') }}</h2>
+      <p>{{ p.t('toolsBody') }}</p>
+      <dl>
+        <div>
+          <dt>{{ p.t('toolsVersion') }}</dt>
+          <dd class="mono">{{ c.adbVersion() || 'Platform-Tools 37.0.1' }}</dd>
+        </div>
+        <div>
+          <dt>{{ p.t('appVersion') }}</dt>
+          <dd>0.1.0</dd>
+        </div>
+      </dl>
+    </section>
+
+    <section class="panel wide">
+      <h2>{{ p.t('about') }}</h2>
+      <p>{{ p.t('aboutBody') }}</p>
+      <div class="licenses">
+        <h3>{{ p.t('notices') }}</h3>
+        <p>{{ p.t('noticesBody') }}</p>
+        <button #licenseTrigger (click)="openNotices()">{{ p.t('showNotices') }}</button>
+      </div>
+    </section>
+  </div>
+</div>
+
+<dialog
+  #licenseDialog
+  (close)="licenseTrigger.focus()"
+  class="license-dialog"
+  aria-labelledby="license-title"
+>
+  <div class="dialog-header">
+    <h2 id="license-title">{{ p.t('notices') }}</h2>
+    <button autofocus (click)="licenseDialog.close()">{{ p.t('hideNotices') }}</button>
+  </div>
+  <div class="dialog-body">
+    @if (loading()) {
+      <p role="status">{{ p.t('loadingNotices') }}</p>
+    }
+    @if (noticeError()) {
+      <p role="alert">{{ p.t('noticesError') }}</p>
+    }
+    @if (notices(); as text) {
+      <pre tabindex="0" [attr.aria-label]="p.t('notices')">{{ text }}</pre>
+    }
+  </div>
+</dialog>

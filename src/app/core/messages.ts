@@ -1,0 +1,241 @@
+export const english = {
+  localWorkspace: 'Local workspace',
+  navigation: 'PREPARATION',
+  collapseSidebar: 'Collapse sidebar',
+  expandSidebar: 'Expand sidebar',
+  desktopEdition: 'DESKTOP EDITION',
+  readFromPhone: 'Read from phone',
+  readingPhone: 'Reading Settings…',
+  fromSettings: 'Read from phone',
+  readingHint:
+    'Keep the phone unlocked. Droid Setup will visibly navigate through its information screens (SIM 1).',
+  readComplete: 'Identifiers read from the phone.',
+  readPartial: 'Some information was read. Android did not provide every value.',
+  readUnavailable: 'Android did not display readable identifiers. No values were guessed.',
+  readerToolsError:
+    'The reader does not match this application version. Restart Droid Setup or reinstall the current package.',
+  readError:
+    'Could not read the Settings screen. Keep the phone unlocked, stop other automation and try again.',
+  cleanupWarning:
+    'Reading finished, but the temporary reader could not be removed after disconnection.',
+  copy: 'Copy',
+  copied: 'Copied',
+  copyFailed: 'Copy failed',
+  imei: 'IMEI',
+  phoneNumber: 'Phone number',
+  workspace: 'DEVICE WORKSPACE',
+  connect: 'Connect device',
+  settings: 'Settings',
+  guide: 'Ready in three steps.',
+  guideLabel: 'GET CONNECTED',
+  step1: 'Prepare your phone',
+  step1Body: 'Unlock your phone. In Settings, enable Developer options and turn on USB debugging.',
+  step1Help:
+    'On most phones: Settings → About phone → tap Build number seven times. Then open Developer options.',
+  usbDebuggingHelp:
+    'Return to Settings and search for Developer options. Open it, find USB debugging under Debugging, turn it on and confirm the warning on the phone.',
+  step2: 'Connect a USB cable',
+  step2Body:
+    'Use a cable that supports data transfer. Keep the phone unlocked and connected directly to this computer.',
+  step3: 'Allow this computer',
+  step3Body: 'When “Allow USB debugging?” appears on the phone, check the computer and tap Allow.',
+  step3Help: 'No prompt? Reconnect the cable and confirm USB debugging is enabled.',
+  detailHelp: 'Show instructions',
+  deviceLabel: 'DEVICE STATUS',
+  refresh: 'Refresh',
+  refreshing: 'Checking…',
+  selectDevice: 'Select a phone',
+  choosePlaceholder: 'Choose a connected phone',
+  manufacturer: 'Manufacturer',
+  model: 'Model',
+  androidVersion: 'Android version',
+  serial: 'Serial number',
+  unknown: 'Unavailable',
+  checked: 'Last checked',
+  notChecked: 'Not checked yet',
+  readOnly: 'Read-only connection',
+  noChanges: 'Your phone stays unchanged.',
+  nextTitle: 'First, a reliable connection.',
+  nextBody: 'Factory reset and guided device setup will arrive in a later version.',
+  settingsTitle: 'Make it yours.',
+  settingsSubtitle: 'A few preferences. Everything stays on this computer.',
+  language: 'Interface language',
+  languageHelp: 'Changes immediately and is remembered on this computer.',
+  storageWarning: 'Preferences could not be saved. Changes may be lost when the app restarts.',
+  tools: 'Connection tools',
+  toolsBody:
+    'ADB is included with Droid Setup. No separate installation or path configuration is needed.',
+  toolsVersion: 'Bundled ADB',
+  appVersion: 'Application version',
+  about: 'About this release',
+  aboutBody:
+    'Droid Setup 0.1 connects and identifies Android phones over USB. It does not reset phones, change permissions or install apps.',
+  notices: 'Third-party notices',
+  noticesBody:
+    'Android Debug Bridge is an Android Open Source Project component. Its license and bundled dependency notices are included below.',
+  loadingNotices: 'Loading bundled licenses…',
+  showNotices: 'Read licenses',
+  hideNotices: 'Close licenses',
+  noticesError: 'The bundled notices could not be loaded. Please reinstall the application.',
+  troubleshooting: 'Connection help',
+  linuxHelp:
+    'Linux: your user needs access to Android USB devices through udev rules. On Arch/EndeavourOS, check the android-udev package and its user-group instructions, then reconnect the phone. Do not run Droid Setup as root.',
+  windowsHelp:
+    'Windows: if the phone is not detected, check Device Manager and install the official USB driver for your phone manufacturer.',
+  checkingTitle: 'Looking for your phone',
+  checkingBody: 'Checking the bundled connection tools and USB devices.',
+  waitingTitle: 'Waiting for your phone',
+  waitingBody: 'Follow the steps on the left. Your phone will appear here when it is detected.',
+  chooseTitle: 'Which phone are we preparing?',
+  chooseBody: 'More than one phone is connected. Choose the one you want to inspect.',
+  connectedTitle: 'Connected and ready',
+  connectedBody: 'USB connection verified. You can review your phone’s details below.',
+  unauthorizedTitle: 'Allow USB debugging',
+  unauthorizedBody:
+    'Unlock your phone and accept the authorization prompt. We’ll check again automatically.',
+  offlineTitle: 'Phone is not responding',
+  offlineBody: 'Reconnect the USB cable, unlock your phone and try again.',
+  permissionsTitle: 'USB access needs attention',
+  permissionsBody:
+    'This computer cannot access the phone. Open connection help to review USB permissions.',
+  unverifiedTitle: 'USB connection not verified',
+  unverifiedBody:
+    'The device was detected, but a physical USB connection could not be confirmed. Connect it directly with a data cable.',
+  unsupportedTitle: 'Phone is in a special mode',
+  unsupportedBody:
+    'Start Android normally, unlock the phone and enable USB debugging before connecting.',
+  missingTitle: 'Connection tools are missing',
+  missingBody:
+    'The bundled ADB executable could not be found or started. Reinstall Droid Setup; a separate ADB installation will not be used.',
+  timeoutTitle: 'The connection took too long',
+  timeoutBody: 'We could not confirm the phone’s current state. Check the cable and try again.',
+  errorTitle: 'We couldn’t check the connection',
+  errorBody: 'Check the phone and cable, then refresh. Previous device details have been cleared.',
+  previewTitle: 'Desktop connection required',
+  previewBody:
+    'This is a browser preview. USB detection is available in the Droid Setup desktop app.',
+} as const;
+export type MessageKey = keyof typeof english;
+export const spanish: Record<MessageKey, string> = {
+  localWorkspace: 'Espacio local',
+  navigation: 'PREPARACIÓN',
+  collapseSidebar: 'Contraer barra lateral',
+  expandSidebar: 'Expandir barra lateral',
+  desktopEdition: 'EDICIÓN DE ESCRITORIO',
+  readFromPhone: 'Leer desde el teléfono',
+  readingPhone: 'Leyendo Ajustes…',
+  fromSettings: 'Leído del teléfono',
+  readingHint:
+    'Mantén el teléfono desbloqueado. Droid Setup navegará de forma visible por sus pantallas de información (SIM 1).',
+  readComplete: 'Identificadores leídos desde el teléfono.',
+  readPartial: 'Se leyó parte de la información. Android no proporcionó todos los valores.',
+  readUnavailable: 'Android no mostró identificadores legibles. No se dedujo ningún valor.',
+  readerToolsError:
+    'El lector no coincide con esta versión de la aplicación. Reinicia Droid Setup o reinstala el paquete actual.',
+  readError:
+    'No se pudo leer Ajustes. Mantén el teléfono desbloqueado, detén otras automatizaciones y vuelve a intentarlo.',
+  cleanupWarning:
+    'La lectura terminó, pero no se pudo retirar el lector temporal tras la desconexión.',
+  copy: 'Copiar',
+  copied: 'Copiado',
+  copyFailed: 'No se pudo copiar',
+  imei: 'IMEI',
+  phoneNumber: 'Número de teléfono',
+  workspace: 'ESPACIO DE DISPOSITIVOS',
+  connect: 'Conectar teléfono',
+  settings: 'Ajustes',
+  guide: 'Conecta en tres pasos.',
+  guideLabel: 'CÓMO CONECTAR',
+  step1: 'Prepara tu teléfono',
+  step1Body:
+    'Desbloquea el teléfono. En Ajustes, activa las opciones de desarrollador y la depuración USB.',
+  step1Help:
+    'En la mayoría de teléfonos: Ajustes → Acerca del teléfono → pulsa Número de compilación siete veces. Después abre Opciones de desarrollador.',
+  usbDebuggingHelp:
+    'Vuelve a Ajustes y busca Opciones de desarrollador. Entra, busca Depuración por USB en la sección Depuración, activa el interruptor y confirma el aviso en el teléfono.',
+  step2: 'Conecta un cable USB',
+  step2Body:
+    'Usa un cable que transfiera datos. Mantén el teléfono desbloqueado y conectado directamente a esta computadora.',
+  step3: 'Autoriza esta computadora',
+  step3Body:
+    'Cuando aparezca «¿Permitir depuración USB?» en el teléfono, comprueba la computadora y pulsa Permitir.',
+  step3Help:
+    '¿No aparece el aviso? Reconecta el cable y comprueba que la depuración USB esté activada.',
+  detailHelp: 'Ver instrucciones',
+  deviceLabel: 'ESTADO DEL DISPOSITIVO',
+  refresh: 'Actualizar',
+  refreshing: 'Comprobando…',
+  selectDevice: 'Selecciona un teléfono',
+  choosePlaceholder: 'Elige un teléfono conectado',
+  manufacturer: 'Fabricante',
+  model: 'Modelo',
+  androidVersion: 'Versión de Android',
+  serial: 'Número de serie',
+  unknown: 'No disponible',
+  checked: 'Última comprobación',
+  notChecked: 'Sin comprobar',
+  readOnly: 'Conexión de solo lectura',
+  noChanges: 'Tu teléfono permanece sin cambios.',
+  nextTitle: 'Primero, una conexión confiable.',
+  nextBody: 'El restablecimiento y la preparación guiada llegarán en una próxima versión.',
+  settingsTitle: 'A tu manera.',
+  settingsSubtitle: 'Unos pocos ajustes. Todo se guarda en esta computadora.',
+  language: 'Idioma de la interfaz',
+  languageHelp: 'Se aplica al instante y se recuerda en esta computadora.',
+  storageWarning:
+    'No se pudieron guardar los ajustes. Los cambios pueden perderse al reiniciar la aplicación.',
+  tools: 'Herramientas de conexión',
+  toolsBody:
+    'ADB viene incluido con Droid Setup. No necesitas instalarlo aparte ni configurar rutas.',
+  toolsVersion: 'ADB incluido',
+  appVersion: 'Versión de la aplicación',
+  about: 'Acerca de esta versión',
+  aboutBody:
+    'Droid Setup 0.1 conecta e identifica teléfonos Android por USB. No restablece teléfonos, cambia permisos ni instala aplicaciones.',
+  notices: 'Avisos de terceros',
+  noticesBody:
+    'Android Debug Bridge es un componente de Android Open Source Project. Su licencia y los avisos de sus dependencias se incluyen a continuación.',
+  loadingNotices: 'Cargando las licencias incluidas…',
+  showNotices: 'Leer licencias',
+  hideNotices: 'Cerrar licencias',
+  noticesError: 'No se pudieron cargar las licencias incluidas. Vuelve a instalar la aplicación.',
+  troubleshooting: 'Ayuda de conexión',
+  linuxHelp:
+    'Linux: tu usuario necesita acceso a dispositivos Android mediante reglas udev. En Arch/EndeavourOS, revisa el paquete android-udev y sus instrucciones sobre grupos de usuarios; después reconecta el teléfono. No ejecutes Droid Setup como root.',
+  windowsHelp:
+    'Windows: si no aparece el teléfono, revisa el Administrador de dispositivos e instala el controlador USB oficial del fabricante.',
+  checkingTitle: 'Buscando tu teléfono',
+  checkingBody: 'Comprobando las herramientas incluidas y los dispositivos USB.',
+  waitingTitle: 'Esperando tu teléfono',
+  waitingBody: 'Sigue los pasos de la izquierda. Tu teléfono aparecerá aquí cuando sea detectado.',
+  chooseTitle: '¿Qué teléfono vamos a preparar?',
+  chooseBody: 'Hay más de un teléfono conectado. Elige el que deseas consultar.',
+  connectedTitle: 'Conectado y listo',
+  connectedBody: 'Conexión USB verificada. Puedes revisar los datos del teléfono a continuación.',
+  unauthorizedTitle: 'Permite la depuración USB',
+  unauthorizedBody:
+    'Desbloquea el teléfono y acepta el aviso de autorización. Volveremos a comprobarlo automáticamente.',
+  offlineTitle: 'El teléfono no responde',
+  offlineBody: 'Reconecta el cable USB, desbloquea el teléfono y vuelve a intentarlo.',
+  permissionsTitle: 'Revisa el acceso USB',
+  permissionsBody:
+    'Esta computadora no puede acceder al teléfono. Abre la ayuda de conexión para revisar los permisos USB.',
+  unverifiedTitle: 'Conexión USB sin verificar',
+  unverifiedBody:
+    'Detectamos el dispositivo, pero no pudimos confirmar una conexión USB física. Conéctalo directamente con un cable de datos.',
+  unsupportedTitle: 'El teléfono está en un modo especial',
+  unsupportedBody:
+    'Inicia Android normalmente, desbloquea el teléfono y activa la depuración USB antes de conectarlo.',
+  missingTitle: 'Faltan las herramientas de conexión',
+  missingBody:
+    'No se pudo encontrar o iniciar el ADB incluido. Vuelve a instalar Droid Setup; no se usará una instalación externa de ADB.',
+  timeoutTitle: 'La conexión tardó demasiado',
+  timeoutBody:
+    'No pudimos confirmar el estado actual del teléfono. Revisa el cable y vuelve a intentarlo.',
+  errorTitle: 'No pudimos comprobar la conexión',
+  errorBody:
+    'Revisa el teléfono y el cable, y actualiza. Se borraron los datos anteriores del dispositivo.',
+  previewTitle: 'Abre la aplicación de escritorio',
+  previewBody:
+    'Esta es una vista previa en navegador. La detección USB está disponible en la aplicación de escritorio Droid Setup.',
+};

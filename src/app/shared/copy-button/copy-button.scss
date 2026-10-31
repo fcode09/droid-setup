@@ -1,0 +1,36 @@
+:host {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+}
+.copy-button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  min-height: 44px;
+  padding: 8px;
+  color: var(--muted);
+  background: transparent;
+  border-color: transparent;
+}
+.copy-button:hover:not(:disabled),
+.copied {
+  color: var(--accent);
+  background: #67e8f910;
+}
+svg {
+  width: 17px;
+  height: 17px;
+}
+.feedback:not(:empty) {
+  position: absolute;
+  right: 0;
+  bottom: 100%;
+  padding: 5px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--raised);
+  font-size: 11px;
+  white-space: nowrap;
+  z-index: 2;
+}

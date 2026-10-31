@@ -1,0 +1,44 @@
+<button
+  #trigger
+  type="button"
+  class="select-trigger"
+  [class.compact]="compact()"
+  [disabled]="disabled()"
+  role="combobox"
+  aria-haspopup="listbox"
+  [attr.aria-label]="label()"
+  [attr.aria-expanded]="expanded()"
+  [attr.aria-controls]="popupId"
+  (click)="toggle()"
+  (keydown)="onTriggerKey($event)"
+>
+  <span class="selection">{{ compact() ? value().toUpperCase() : selectedLabel() }}</span
+  ><svg viewBox="0 0 20 20" aria-hidden="true" [class.rotated]="expanded()">
+    <path d="m5 8 5 5 5-5" />
+  </svg>
+</button>
+<div
+  #popup
+  popover="manual"
+  class="select-popup"
+  [id]="popupId"
+  role="listbox"
+  [attr.aria-label]="label()"
+  (keydown)="onOptionKey($event)"
+>
+  @for (option of options(); track option.value; let index = $index) {
+    <button
+      type="button"
+      class="option"
+      role="option"
+      [attr.aria-selected]="option.value === value()"
+      [tabIndex]="activeIndex() === index ? 0 : -1"
+      (click)="choose(index)"
+    >
+      <span>{{ option.label }}</span>
+      @if (option.value === value()) {
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m4 10 4 4 8-8" /></svg>
+      }
+    </button>
+  }
+</div>
