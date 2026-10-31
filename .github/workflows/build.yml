@@ -45,11 +45,12 @@ jobs:
           rustup override set 1.99.1
       - name: Install locked frontend dependencies
         run: npm ci
-      - name: Prepare bundled ADB and verify frontend
-        run: |
-          npm run tools:prepare
-          npm test
-          npm run build
+      - name: Prepare and verify bundled tools
+        run: npm run tools:prepare
+      - name: Test frontend
+        run: npm test
+      - name: Build frontend
+        run: npm run build
       - name: Test native code
         run: cargo test --locked --manifest-path src-tauri/Cargo.toml
       - name: Build Windows installer
