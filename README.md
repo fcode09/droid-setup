@@ -17,6 +17,25 @@ A desktop toolkit for preparing Android devices on Windows and Linux.
 
 The application does not erase data, reset phones, grant permissions, install APKs or bypass Android authorization. A phone at its initial welcome screen may require manual setup before USB debugging can be enabled.
 
+## Build on Linux with Docker
+
+Docker is the recommended build path on Arch/EndeavourOS. It provides an Ubuntu 24.04 environment containing Node, Rust and Tauri's native dependencies.
+
+```bash
+bash scripts/docker-build.sh
+```
+
+The build runs frontend and Rust tests, creates the AppImage and exports it with SHA-256 checksums and ADB notices into a new `artifacts/linux-<timestamp>-<pid>/` directory. No USB device, Docker socket or host project directory is mounted into a running container. Network access is needed to prepare build dependencies; USB detection in the finished application works offline.
+
+Run the resulting AppImage **on the host**, not inside Docker:
+
+```bash
+chmod +x artifacts/linux-<timestamp>-<pid>/*.AppImage
+./artifacts/linux-<timestamp>-<pid>/Droid*.AppImage
+```
+
+See [build and packaging details](docs/building.md) for native development, Windows builds and compatibility limits.
+
 ## Native development
 
 Requirements: Node 24.21.0, npm, Rust 1.99.1, and the [Tauri system dependencies](https://v2.tauri.app/start/prerequisites/) for your OS. Use the Angular CLI installed in this project; no global Angular CLI is necessary.
@@ -35,14 +54,6 @@ npm run tools:prepare
 cargo test --locked --manifest-path src-tauri/Cargo.toml
 ```
 
-Create a native package on the corresponding OS:
-
-```bash
-npm run desktop:build
-```
-
-Windows uses the checked-in NSIS configuration. Validate its installer and USB behavior on Windows separately.
-
 The frontend uses Angular standalone components, strict TypeScript, signals and SCSS. Rust owns the native command boundary. All UI text lives in typed English/Spanish dictionaries. Language and sidebar expansion preferences are persisted; device inventories and identifiers are not written to disk.
 
 ## USB detection
@@ -60,7 +71,7 @@ On Arch/EndeavourOS, review the `android-udev` package and its documented group 
 
 Build preparation downloads **Android Platform-Tools 37.0.1** from versioned Google URLs. `scripts/adb-manifest.json` pins archive and individual-file SHA-256 hashes. A changed download fails verification; upgrades require an intentional manifest update.
 
-Only ADB, its supporting libraries, source properties and the original `NOTICE.txt` are bundled. Other tools such as fastboot are excluded. The bundled notices are available under **Settings → Read licenses** and in the packaged resources.
+Only ADB, its supporting libraries, source properties and the original `NOTICE.txt` are bundled. Other tools such as fastboot are excluded. The bundled notices are available under **Settings → Read licenses** and beside exported packages.
 
 Android Debug Bridge is an Android Open Source Project component; see its [Apache 2.0 notice](https://android.googlesource.com/platform/packages/modules/adb/+/refs/heads/main/NOTICE) and Google's [SDK terms](https://developer.android.com/studio/terms), including the open-source component provision. Preserve all bundled notices when distributing builds. Build dependencies have their own licenses.
 
@@ -68,7 +79,7 @@ Android Debug Bridge is an Android Open Source Project component; see its [Apach
 
 Automated fake-device tests verify parsing, command restrictions, USB verification, timeouts, disconnects, selection and UI state. They do not establish real phone compatibility. Browser checks verify interface behavior and localization, not native USB access.
 
-Before calling a release device-tested, open the packaged application and complete connect/authorize/disconnect/reconnect on a real phone in both the target Linux environment and Windows. Build success and artifact creation are separate from those checks.
+Before calling a release device-tested, open the packaged application and complete connect/authorize/disconnect/reconnect on a real phone in both the target Linux environment and Windows. Build success and artifact creation are separate from those checks. CI uploads artifacts only; it does not publish a GitHub release or sign installers.
 
 ## Samsung identifiers
 
