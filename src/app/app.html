@@ -42,6 +42,16 @@
         ><span class="nav-text">{{ p.t('connect') }}</span>
       </a>
       <a
+        [attr.aria-label]="p.t('reset')"
+        [attr.title]="p.t('reset')"
+        routerLink="/reset"
+        routerLinkActive="active"
+        ariaCurrentWhenActive="page"
+        ><svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 10a8 8 0 1 1 1 8M4 4v6h6M12 8v5l3 2" /></svg
+        ><span class="nav-text">{{ p.t('reset') }}</span></a
+      >
+      <a
         [attr.aria-label]="p.t('settings')"
         [attr.title]="p.t('settings')"
         routerLink="/settings"
@@ -90,9 +100,11 @@
       <span class="footer-status"
         ><svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M12 3 4 6v6c0 4 8 9 8 9s8-5 8-9V6zM8 12l3 3 5-6" /></svg
-        >{{ p.t('readOnly') }}</span
-      ><span class="footer-detail">{{ p.t('noChanges') }}</span
-      ><span class="footer-version">v0.1.0</span>
+        >{{ p.t(currentView() === 'reset' ? 'resetFooter' : 'readOnly') }}</span
+      ><span class="footer-detail">{{
+        p.t(currentView() === 'reset' ? 'resetFooterDetail' : 'noChanges')
+      }}</span
+      ><span class="footer-version">v0.2.0</span>
     </footer>
   </div>
 </div>

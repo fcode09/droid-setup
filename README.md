@@ -2,7 +2,7 @@
 
 A desktop toolkit for preparing Android devices on Windows and Linux.
 
-**Version 0.1** provides a guided USB connection screen, device information with copy buttons, an explicit Settings-reader action, and an English/Spanish interface. Factory reset, app management, and permission changes are planned for later releases and are not implemented here.
+**Version 0.2** includes USB device information, English/Spanish controls, Samsung identifier reading and a cross-manufacturer factory-reset preparation wizard. The wizard checks accounts and restrictions, guides account removal by the owner, then opens Android Settings for the final on-phone confirmation. App management and permission changes remain future work.
 
 ## Use the application
 
@@ -15,7 +15,23 @@ A desktop toolkit for preparing Android devices on Windows and Linux.
 
 **ADB is included.** You do not need to install Android Studio, Java, Node, Rust or ADB, or configure a path to use a packaged release. Droid Setup never falls back to system ADB. Linux USB access rules or a Windows manufacturer USB driver may still be required.
 
-The application does not erase data, reset phones, grant permissions, install APKs or bypass Android authorization. A phone at its initial welcome screen may require manual setup before USB debugging can be enabled.
+The application never sends a wipe command, silently removes accounts, grants permissions, installs APKs or bypasses Android authorization. The owner performs the final factory-reset confirmation in Android Settings. A phone at its initial welcome screen may require manual setup before USB debugging can be enabled.
+
+## Prepare a factory reset
+
+1. Connect and authorize the intended phone, then open **Factory reset**. This module uses a common Android flow; it is not limited to Samsung.
+2. Click **Check device**. The application reads account types/counts across reported Android users, the active user, device/profile ownership and factory-reset restrictions. It does not collect account names, passwords or recovery codes.
+3. Review the findings. Detected accounts, extra users/profiles, a non-owner/locked user, an administrator or an explicit reset restriction block the reset handoff. **None reported** is limited to Android's output; it is not proof that Google FRP or a manufacturer cloud activation lock has been removed.
+4. Use **Open account settings** and ask the owner to remove accounts on the phone. Samsung/Xiaomi cloud sign-out may require the owner's password and Find device confirmation. For an account not listed in Android Settings, sign out in its corresponding application, then check again. No account databases or authenticator apps are cleared automatically.
+5. After a fresh check, confirm backup and account/cloud sign-out with the owner. Incomplete checks remain explicitly unverified and require a separate manual review acknowledgment; this never overrides a known blocker.
+6. Confirm ownership authorization, data loss and the exact serial number. **Open reset settings** consumes the review, rechecks the same physical device/user and opens the exported Settings entry if available. When an OEM does not provide or permit that entry, the app opens general Settings and shows the manufacturer's manual path.
+7. Review and confirm the actual erase **on the phone**. A USB disconnect is reported as an unknown reset state, never success.
+
+Review IDs are single-use and expire after five minutes. Device/user changes, opening account settings, failed checks or an account-list change require a new review. Background discovery pauses during device actions. Only one device is inspected at a time.
+
+Account removal and cloud unlinking must be completed through the owner's normal Android/OEM flows. Do not use this module as evidence that FRP, enterprise enrollment or vendor activation protections are cleared. Use the administrator/provider's supported process when necessary. See [Samsung's reset preparation](https://www.samsung.com/uk/support/mobile-devices/how-do-i-perform-factory-reset-on-my-mobile-device/) and [Xiaomi's transfer guidance](https://account.xiaomi.com/helpcenter/faq/en_US/03.account-safety/08.lost-stolen-replaced/faq-3).
+
+The preflight was exercised read-only on Xiaomi Android 14 and a ZTE Blade A54. No real accounts were removed and no real factory reset was performed during implementation validation. Automated tests cover malformed/partial account data, other-user accounts, restrictions, stale reviews and Settings navigation with simulated devices.
 
 ## Build on Linux with Docker
 

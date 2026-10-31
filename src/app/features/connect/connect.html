@@ -11,7 +11,7 @@
         ><button
           class="refresh"
           (click)="c.refresh()"
-          [disabled]="c.busy() || c.readingIdentifiers() || c.state() === 'preview'"
+          [disabled]="c.busy() || c.actionBusy() || c.state() === 'preview'"
         >
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M20 7v5h-5M4 17v-5h5M6 7a7 7 0 0 1 12-1l2 6M4 12l2 6a7 7 0 0 0 12-1" /></svg
@@ -26,7 +26,7 @@
             [value]="c.selectedSerial() ?? ''"
             [placeholder]="p.t('choosePlaceholder')"
             [options]="deviceOptions()"
-            [disabled]="c.readingIdentifiers()"
+            [disabled]="c.actionBusy()"
             (valueChange)="c.select($event)"
           />
         </div>
@@ -77,7 +77,7 @@
             <div class="identifier-actions">
               <button
                 class="primary"
-                [disabled]="c.busy() || c.readingIdentifiers()"
+                [disabled]="c.busy() || c.actionBusy()"
                 (click)="readFromPhone()"
               >
                 {{ p.t(c.readingIdentifiers() ? 'readingPhone' : 'readFromPhone') }}

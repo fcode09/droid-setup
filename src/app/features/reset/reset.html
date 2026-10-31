@@ -1,0 +1,341 @@
+<div class="reset-scroll" tabindex="0" [attr.aria-label]="p.t('reset')">
+  <header class="reset-header">
+    <div>
+      <div class="eyebrow">{{ p.t('resetEyebrow') }}</div>
+      <h1>{{ p.t('resetTitle') }}</h1>
+      <p>{{ p.t('resetIntro') }}</p>
+    </div>
+  </header>
+  <ol class="progress" [attr.aria-label]="p.t('resetProgress')">
+    @for (key of stepKeys; track key; let index = $index) {
+      <li
+        [class.current]="step() === index + 1"
+        [class.past]="step() > index + 1"
+        [attr.aria-current]="step() === index + 1 ? 'step' : null"
+      >
+        <span>{{ index + 1 }}</span
+        ><span class="step-name">{{ p.t(key) }}</span>
+      </li>
+    }
+  </ol>
+  <div class="step-caption">
+    {{ p.t('resetStep') }} {{ step() }} / 4 · {{ p.t(stepKeys[step() - 1]) }}
+  </div>
+  @if (targetDevice(); as device) {
+    <div class="target-summary">
+      <div>
+        <span class="summary-label">{{ p.t('resetTarget') }}</span
+        ><strong>{{ device.model || p.t('unknown') }}</strong>
+      </div>
+      <div>
+        <span class="summary-label">{{ p.t('serial') }}</span
+        ><span class="mono">{{ target() || device.serial }}</span>
+      </div>
+      <span class="manufacturer">{{ device.manufacturer }}</span>
+    </div>
+  }
+  @if (error(); as message) {
+    <p class="notice issue" role="alert">{{ p.t(message) }}</p>
+  }
+  @if (busy()) {
+    <p class="busy-notice" role="status">{{ p.t('resetWorking') }}</p>
+  }
+  @if (needsRecheck() && !handoff() && review()) {
+    <p class="notice issue">{{ p.t('resetStale') }}</p>
+  }
+
+  <section class="panel step-panel">
+    <h2 #stepHeading tabindex="-1">{{ p.t(stepKeys[step() - 1]) }}</h2>
+    @switch (step()) {
+      @case (1) {
+        <p>{{ p.t('resetChooseHelp') }}</p>
+        @if (c.devices().length) {
+          <app-select
+            [label]="p.t('selectDevice')"
+            [value]="c.selectedSerial() || ''"
+            [options]="options()"
+            [placeholder]="p.t('choosePlaceholder')"
+            [disabled]="busy() || c.actionBusy()"
+            (valueChange)="c.select($event)"
+          />
+        }
+        @if (c.state() !== 'connected') {
+          <p class="notice">{{ p.t(c.description()) }}</p>
+          <a routerLink="/connect">{{ p.t('resetConnectionGuide') }}</a>
+        }
+        <div class="note-box">
+          <h3>{{ p.t('resetGuidedTitle') }}</h3>
+          <p>{{ p.t('resetGuidedBody') }}</p>
+        </div>
+        <div class="actions">
+          <button class="primary" (click)="checkDevice()" [disabled]="!available()">
+            {{ p.t('resetCheckDevice') }}
+          </button>
+        </div>
+      }
+      @case (2) {
+        @if (inspection(); as report) {
+          <p>{{ p.t('resetAccountsHelp') }}</p>
+          <div class="checks">
+            <div class="check-row">
+              <div>
+                <h3>{{ p.t('resetAccounts') }}</h3>
+                <p>{{ p.t('resetAccountsScope') }}</p>
+              </div>
+              <span class="evidence" [class.issue]="report.accounts.state !== 'none-reported'">{{
+                p.t(
+                  report.accounts.state === 'detected'
+                    ? 'resetDetected'
+                    : report.accounts.state === 'unknown'
+                      ? 'resetUnknown'
+                      : 'resetNoneReported'
+                )
+              }}</span>
+            </div>
+            @for (group of report.accounts.groups; track group.userId + ':' + group.accountType) {
+              <div class="account-row">
+                <span>{{
+                  group.provider === 'google'
+                    ? 'Google'
+                    : group.provider === 'samsung'
+                      ? 'Samsung'
+                      : group.provider === 'xiaomi'
+                        ? 'Xiaomi / Mi'
+                        : p.t('resetOtherAccounts')
+                }}</span
+                ><span>{{ group.count }} · {{ p.t('resetAndroidUser') }} {{ group.userId }}</span>
+                @if (group.provider === 'other') {
+                  <code>{{ group.accountType }}</code>
+                }
+              </div>
+            }
+            <div class="check-row">
+              <div>
+                <h3>{{ p.t('resetProfiles') }}</h3>
+                <p>{{ p.t('resetProfilesScope') }}</p>
+              </div>
+              <span
+                class="evidence"
+                [class.issue]="
+                  report.users === null ||
+                  blockers().includes('profiles') ||
+                  blockers().includes('owner-user') ||
+                  blockers().includes('locked-user')
+                "
+                >{{
+                  p.t(
+                    profilesDetected()
+                      ? 'resetDetected'
+                      : report.users === null ||
+                          report.currentUser === null ||
+                          report.userUnlocked === null
+                        ? 'resetUnknown'
+                        : 'resetNoneReported'
+                  )
+                }}</span
+              >
+            </div>
+            <div class="check-row">
+              <div>
+                <h3>{{ p.t('resetManagement') }}</h3>
+              </div>
+              <span class="evidence" [class.issue]="report.management !== 'none-reported'">{{
+                p.t(
+                  report.management === 'detected'
+                    ? 'resetDetected'
+                    : report.management === 'unknown'
+                      ? 'resetUnknown'
+                      : 'resetNoneReported'
+                )
+              }}</span>
+            </div>
+            <div class="check-row">
+              <div>
+                <h3>{{ p.t('resetRestriction') }}</h3>
+              </div>
+              <span class="evidence" [class.issue]="report.restriction !== 'none-reported'">{{
+                p.t(
+                  report.restriction === 'detected'
+                    ? 'resetDetected'
+                    : report.restriction === 'unknown'
+                      ? 'resetUnknown'
+                      : 'resetNoneReported'
+                )
+              }}</span>
+            </div>
+          </div>
+          <p class="notice">{{ p.t('resetCloudLimitation') }}</p>
+          @if (blockers().length) {
+            <ul class="blockers">
+              @for (blocker of blockers(); track blocker) {
+                <li>{{ p.t(reason(blocker)) }}</li>
+              }
+            </ul>
+          }
+          @if (incomplete()) {
+            <p class="notice issue">{{ p.t('resetIncomplete') }}</p>
+          }
+          <div class="actions">
+            <button (click)="go(1)" [disabled]="busy()">{{ p.t('resetBack') }}</button
+            ><button (click)="checkDevice()" [disabled]="!available()">
+              {{ p.t('resetRecheck') }}</button
+            ><button class="primary" (click)="go(3)" [disabled]="busy()">
+              {{ p.t('resetPreparePhone') }}
+            </button>
+          </div>
+        }
+      }
+      @case (3) {
+        <p>{{ p.t('resetPrepareHelp') }}</p>
+        <div class="preparation-grid">
+          <article class="guide-card">
+            <h3>Google</h3>
+            <p>{{ p.t('resetGoogleGuide') }}</p>
+          </article>
+          <article class="guide-card">
+            <h3>{{ p.t('resetManufacturerAccount') }}</h3>
+            <p>{{ p.t(cloudPath()) }}</p>
+          </article>
+        </div>
+        <p class="notice">{{ p.t('resetOwnerCredentials') }}</p>
+        @if (hasOtherAccounts()) {
+          <p class="notice">{{ p.t('resetOtherGuide') }}</p>
+        }
+        <div class="actions account-actions">
+          <button (click)="openAccounts()" [disabled]="!available() || !target()">
+            {{ p.t('resetOpenAccounts') }}</button
+          ><button (click)="checkDevice()" [disabled]="!available()">
+            {{ p.t('resetRecheck') }}
+          </button>
+        </div>
+        @if (openedAccounts()) {
+          <p class="notice" role="status">
+            {{ p.t(openedAccounts() === 'general' ? 'resetGeneralOpened' : 'resetAccountsOpened') }}
+          </p>
+        }
+        @if (blockers().length) {
+          <ul class="blockers">
+            @for (blocker of blockers(); track blocker) {
+              <li>{{ p.t(reason(blocker)) }}</li>
+            }
+          </ul>
+        }
+        <div class="acknowledgments">
+          <label class="check"
+            ><input
+              type="checkbox"
+              [checked]="acks().backupReviewed"
+              (change)="setAck('backupReviewed', $any($event.target).checked)"
+              [disabled]="busy()"
+            /><span>{{ p.t('resetAckBackup') }}</span></label
+          >
+          <label class="check"
+            ><input
+              type="checkbox"
+              [checked]="acks().accountsCheckedOnPhone"
+              (change)="setAck('accountsCheckedOnPhone', $any($event.target).checked)"
+              [disabled]="busy()"
+            /><span>{{ p.t('resetAckAccounts') }}</span></label
+          >
+          <label class="check"
+            ><input
+              type="checkbox"
+              [checked]="acks().cloudSignOutChecked"
+              (change)="setAck('cloudSignOutChecked', $any($event.target).checked)"
+              [disabled]="busy()"
+            /><span>{{ p.t('resetAckCloud') }}</span></label
+          >
+          @if (incomplete()) {
+            <label class="check manual-review"
+              ><input
+                type="checkbox"
+                [checked]="acks().manualReviewAccepted"
+                (change)="setAck('manualReviewAccepted', $any($event.target).checked)"
+                [disabled]="busy()"
+              /><span>{{ p.t('resetAckManual') }}</span></label
+            >
+          }
+        </div>
+        <div class="actions">
+          <button (click)="go(2)" [disabled]="busy()">{{ p.t('resetBack') }}</button
+          ><button class="primary" (click)="go(4)" [disabled]="!prepared() || busy()">
+            {{ p.t('resetReviewContinue') }}
+          </button>
+        </div>
+      }
+      @case (4) {
+        @if (handoff()) {
+          <div class="handoff" role="status">
+            <h3>{{ p.t('resetContinueOnPhone') }}</h3>
+            <p>{{ p.t(handoff() === 'general' ? 'resetGeneralOpened' : 'resetOpened') }}</p>
+            <p>{{ p.t(resetPath()) }}</p>
+            <p>{{ p.t('resetNotComplete') }}</p>
+            @if (disconnected()) {
+              <p class="notice issue">{{ p.t('resetDisconnected') }}</p>
+            }
+          </div>
+          <div class="actions">
+            <button (click)="restart()" [disabled]="busy()">{{ p.t('resetAnotherDevice') }}</button>
+          </div>
+        } @else {
+          <p>{{ p.t('resetFinalHelp') }}</p>
+          @if (incomplete()) {
+            <p class="notice issue">{{ p.t('resetManualStillUnverified') }}</p>
+          }
+          <div class="destructive-notice">
+            <h3>{{ p.t('resetDataLossTitle') }}</h3>
+            <p>{{ p.t('resetDataLossBody') }}</p>
+          </div>
+          <div class="acknowledgments">
+            <label class="check"
+              ><input
+                type="checkbox"
+                [checked]="acks().authorized"
+                (change)="setAck('authorized', $any($event.target).checked)"
+                [disabled]="busy()"
+              /><span>{{ p.t('resetAckAuthorized') }}</span></label
+            >
+            <label class="check"
+              ><input
+                type="checkbox"
+                [checked]="acks().dataLossUnderstood"
+                (change)="setAck('dataLossUnderstood', $any($event.target).checked)"
+                [disabled]="busy()"
+              /><span>{{ p.t('resetAckErase') }}</span></label
+            >
+          </div>
+          <label for="reset-serial">{{ p.t('resetTypeSerial') }}</label
+          ><input
+            id="reset-serial"
+            maxlength="256"
+            class="mono"
+            autocomplete="off"
+            spellcheck="false"
+            [value]="acks().serialConfirmation"
+            (input)="setAck('serialConfirmation', $any($event.target).value)"
+            [disabled]="busy()"
+            [attr.aria-describedby]="'reset-serial-help'"
+          />
+          <p id="reset-serial-help" class="field-help mono">{{ target() }}</p>
+          <p class="notice">{{ p.t('resetFreshCheck') }}</p>
+          @if (needsRecheck()) {
+            <button (click)="checkDevice()" [disabled]="!available()">
+              {{ p.t('resetRecheck') }}
+            </button>
+          }
+          <div class="actions">
+            <button (click)="go(3)" [disabled]="busy()">{{ p.t('resetBack') }}</button
+            ><button class="danger" (click)="openReset()" [disabled]="!canOpenReset()">
+              {{ p.t('resetOpenSettings') }}
+            </button>
+          </div>
+        }
+      }
+    }
+  </section>
+  <div class="route-bottom">
+    <button class="text-button" (click)="restart()" [disabled]="busy()">
+      {{ p.t('resetStartOver') }}</button
+    ><span>{{ p.t('resetNoAutomaticErase') }}</span>
+  </div>
+</div>

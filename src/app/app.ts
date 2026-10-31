@@ -22,7 +22,11 @@ export class App {
     { initialValue: this.router.url },
   );
   readonly currentView = computed(() =>
-    this.currentUrl().startsWith('/settings') ? 'settings' : 'connect',
+    this.currentUrl().startsWith('/settings')
+      ? 'settings'
+      : this.currentUrl().startsWith('/reset')
+        ? 'reset'
+        : 'connect',
   );
   readonly p = inject(Preferences);
   readonly languages = [

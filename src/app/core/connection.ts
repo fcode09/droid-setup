@@ -31,6 +31,7 @@ export class Connection implements OnDestroy {
   readonly selectedSerial = signal<string | null>(null);
   readonly busy = signal(false);
   readonly readingIdentifiers = signal(false);
+  readonly actionBusy = signal(false);
   readonly error = signal<ConnectionState | null>(null);
   readonly lastChecked = signal<Date | null>(null);
   readonly adbVersion = signal<string | null>(null);
@@ -61,15 +62,14 @@ export class Connection implements OnDestroy {
   }
 
   select(serial: string): void {
-    if (this.readingIdentifiers() || !this.devices().some((d) => d.serial === serial)) return;
+    if (this.actionBusy() || !this.devices().some((d) => d.serial === serial)) return;
     this.selectionRevision++;
     this.selectedSerial.set(serial);
     void this.refresh();
   }
 
   async refresh(): Promise<void> {
-    if (this.busy() || this.readingIdentifiers() || this.disposed || !this.desktop.available)
-      return;
+    if (this.busy() || this.actionBusy() || this.disposed || !this.desktop.available) return;
     clearTimeout(this.timer);
     this.busy.set(true);
     const revision = this.selectionRevision;
@@ -101,16 +101,34 @@ export class Connection implements OnDestroy {
   }
 
   async readIdentifiers(): Promise<IdentifierResult> {
-    const serial = this.selectedSerial();
     if (!this.identifiersSupported()) throw { code: 'unsupported-device' };
-    if (!serial || this.busy() || this.readingIdentifiers() || this.state() !== 'connected')
-      throw { code: 'busy' };
-    clearTimeout(this.timer);
     this.readingIdentifiers.set(true);
     try {
-      return await this.desktop.readIdentifiers(serial);
+      return await this.runDeviceAction((serial) => this.desktop.readIdentifiers(serial));
     } finally {
       this.readingIdentifiers.set(false);
+    }
+  }
+
+  async runDeviceAction<T>(
+    action: (serial: string) => Promise<T>,
+    expectedSerial?: string,
+  ): Promise<T> {
+    const serial = this.selectedSerial();
+    if (
+      !serial ||
+      (expectedSerial && expectedSerial !== serial) ||
+      this.busy() ||
+      this.actionBusy() ||
+      this.state() !== 'connected'
+    )
+      throw { code: 'busy' };
+    clearTimeout(this.timer);
+    this.actionBusy.set(true);
+    try {
+      return await action(serial);
+    } finally {
+      this.actionBusy.set(false);
       if (!this.disposed) void this.refresh();
     }
   }

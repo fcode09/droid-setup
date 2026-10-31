@@ -1,7 +1,7 @@
 import { By } from '@angular/platform-browser';
 import { Select } from './shared/select/select';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { Router, provideRouter } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { App } from './app';
 import { routes } from './app.routes';
@@ -37,5 +37,15 @@ describe('Desktop interface', () => {
     harness.detectChanges();
     expect(harness.routeNativeElement?.querySelector('h1')?.textContent).toBe('A tu manera.');
     expect(localStorage.getItem('droid-setup.language')).toBe('es');
+  });
+  it('uses guided-reset context in the shell on the reset route', async () => {
+    const fixture = TestBed.createComponent(App);
+    await fixture.whenStable();
+    await TestBed.inject(Router).navigateByUrl('/reset');
+    await fixture.whenStable();
+    const root = fixture.nativeElement as HTMLElement;
+    expect(root.querySelector('.breadcrumb .current')?.textContent).toBe('Factory reset');
+    expect(root.querySelector('footer')?.textContent).toContain('Guided reset');
+    expect(root.querySelector('footer')?.textContent).not.toContain('Read-only connection');
   });
 });

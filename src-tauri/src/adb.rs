@@ -263,7 +263,7 @@ pub fn parse_devices(output: &str) -> Result<Vec<Device>, Failure> {
 }
 
 #[cfg(test)]
-mod tests {
+pub(crate) mod tests {
     use super::*;
     #[test]
     fn empty_inventory_is_valid() {
@@ -322,15 +322,15 @@ mod tests {
     // Serialize executable-fixture creation/spawn. Docker overlayfs can return
     // ETXTBSY when parallel tests inherit another fixture's writable descriptor.
     #[cfg(unix)]
-    static FAKE_PROCESS_LOCK: tokio::sync::Mutex<()> = tokio::sync::Mutex::const_new(());
+    pub(crate) static FAKE_PROCESS_LOCK: tokio::sync::Mutex<()> = tokio::sync::Mutex::const_new(());
 
     #[cfg(unix)]
-    struct Fixture {
-        directory: PathBuf,
+    pub(crate) struct Fixture {
+        pub(crate) directory: PathBuf,
     }
     #[cfg(unix)]
     impl Fixture {
-        fn new(script: &str) -> Self {
+        pub(crate) fn new(script: &str) -> Self {
             use std::os::unix::fs::PermissionsExt;
             let unique = std::time::SystemTime::now()
                 .duration_since(std::time::UNIX_EPOCH)
@@ -346,7 +346,7 @@ mod tests {
             std::fs::set_permissions(file, std::fs::Permissions::from_mode(0o700)).unwrap();
             Self { directory }
         }
-        fn client(&self) -> Adb {
+        pub(crate) fn client(&self) -> Adb {
             Adb {
                 path: self.directory.join("adb"),
             }
@@ -360,7 +360,7 @@ mod tests {
     }
 
     #[cfg(unix)]
-    const FAKE: &str = r#"
+    pub(crate) const FAKE: &str = r#"
 case "$*" in
   version) printf 'Android Debug Bridge version 1.0.41\nVersion test\n' ;;
   'devices -l') printf 'List of devices attached\nUSB01 device model:Galaxy_A06\n' ;;

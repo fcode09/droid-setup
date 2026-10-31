@@ -149,4 +149,20 @@ describe('USB connection state', () => {
     expect(connection.state()).toBe('preview');
     expect(desktop.scan).not.toHaveBeenCalled();
   });
+  it('serializes reset actions with polling and never switches the requested device', async () => {
+    desktop.scan.mockResolvedValue(result([phone()]));
+    await connection.refresh();
+    let finish!: () => void;
+    const action = vi.fn(() => new Promise<void>((resolve) => (finish = resolve)));
+    const pending = connection.runDeviceAction(action, 'USB01');
+    await connection.refresh();
+    expect(desktop.scan).toHaveBeenCalledTimes(1);
+    expect(action).toHaveBeenCalledWith('USB01');
+    await expect(connection.runDeviceAction(action, 'USB01')).rejects.toEqual({ code: 'busy' });
+    finish();
+    await pending;
+    await Promise.resolve();
+    expect(connection.actionBusy()).toBe(false);
+    await expect(connection.runDeviceAction(action, 'OTHER')).rejects.toEqual({ code: 'busy' });
+  });
 });

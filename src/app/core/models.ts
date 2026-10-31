@@ -34,3 +34,38 @@ export interface IdentifierResult {
   phoneNumber: string | null;
   cleanupPending: boolean;
 }
+
+export type ResetEvidence = 'none-reported' | 'detected' | 'unknown';
+export interface ResetAccountGroup {
+  userId: number;
+  provider: 'google' | 'samsung' | 'xiaomi' | 'other';
+  accountType: string;
+  count: number;
+}
+export interface ResetInspection {
+  serial: string;
+  manufacturer: string | null;
+  model: string | null;
+  currentUser: number | null;
+  users: { id: number; managed: boolean }[] | null;
+  userUnlocked: boolean | null;
+  accounts: { state: ResetEvidence; complete: boolean; groups: ResetAccountGroup[] };
+  management: ResetEvidence;
+  restriction: ResetEvidence;
+  blockers: string[];
+  incompleteChecks: string[];
+}
+export interface ResetReview {
+  id: string;
+  inspection: ResetInspection;
+}
+export interface ResetAcknowledgments {
+  serialConfirmation: string;
+  authorized: boolean;
+  backupReviewed: boolean;
+  accountsCheckedOnPhone: boolean;
+  cloudSignOutChecked: boolean;
+  dataLossUnderstood: boolean;
+  manualReviewAccepted: boolean;
+}
+export type ResetSettingsPage = 'accounts' | 'reset' | 'general';
